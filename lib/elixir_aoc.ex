@@ -1,18 +1,16 @@
 defmodule ElixirAoc do
-  @moduledoc """
-  Documentation for `ElixirAoc`.
-  """
+  defp pivot_one_item(acc, _, []), do: acc
+  defp pivot_one_item({less, more}, item, [head | tail]) do
+    if item < head do
+      pivot_one_item({less, [head | more]}, item, tail)
+    else
+      pivot_one_item({[head | less], more}, item, tail)
+    end
+  end
 
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> ElixirAoc.hello()
-      :world
-
-  """
-  def hello do
-    :world
+  def pivot_sort([]), do: []
+  def pivot_sort([head | tail]) do
+    {less, more} = pivot_one_item({[], []}, head, tail)
+    Enum.concat(pivot_sort(less), [head | pivot_sort(more)])
   end
 end
