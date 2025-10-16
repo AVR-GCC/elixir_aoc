@@ -13,4 +13,10 @@ defmodule ElixirAoc do
     {less, more} = pivot_one_item({[], []}, head, tail)
     Enum.concat(pivot_sort(less), [head | pivot_sort(more)])
   end
+
+  def histogramify([head | tail]) do
+    map = histogramify(tail)
+    Map.update(map, head, 1, fn cur -> cur + 1 end)
+  end
+  def histogramify([]), do: %{}
 end
