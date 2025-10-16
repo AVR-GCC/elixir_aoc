@@ -15,29 +15,17 @@ defmodule Day2 do
     0..-2//1)
   end
 
-  def is_safe(_, []), do: true
-  def is_safe(_, [_]), do: true
-  def is_safe(direction, [head, neck | tail]) do
-    if !(case direction do
-      :reducing -> head > neck
-      :increasing -> neck > head  
-    end) do false
-    else
-      if (abs(head - neck) > 3) do false
-      else
-        is_safe(direction, [neck | tail])
-      end
-    end
+  def is_safe_duo(x, y), do: abs(x - y) <= 3 and x != y
+  def is_safe_trio(x, y, z) do
+    is_safe_duo(x, y) and is_safe_duo(y, z) and ((x > y and y > z) or (x < y and y < z))
   end
+
   def is_safe([]), do: true
   def is_safe([_]), do: true
-  def is_safe([x, y]), do: abs(x - y) <= 3 and x != y
-  def is_safe([head, neck | _] = lst) do
-    if head == neck do false
-    else
-      direction = if head > neck do :reducing else :increasing end
-      is_safe(direction, lst)
-    end
+  def is_safe([x, y]), do: is_safe_duo(x, y)
+  def is_safe([x, y, z]), do: is_safe_trio(x, y, z)
+  def is_safe([head, neck, torso | tail]) do
+    is_safe_trio(head, neck, torso) and is_safe([neck, torso | tail])
   end
 
   def part1(path) do
