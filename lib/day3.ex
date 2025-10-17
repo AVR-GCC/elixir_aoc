@@ -1,6 +1,5 @@
 defmodule Day3 do
-  def part1(path) do
-    input = File.read!(path)
+  def mulshit(input) do
     pattern = :binary.compile_pattern(["mul(", ")"])
     splitted = String.split(input, pattern)
     Enum.reduce(splitted, 0, fn snip, acc -> 
@@ -14,5 +13,16 @@ defmodule Day3 do
         _ -> acc
       end
     end)
+  end
+
+  def part1(path) do
+    input = File.read!(path)
+    mulshit(input)
+  end
+
+  def part2(path) do
+    input = File.read!(path)
+    splitted = String.split(input, ~r/don't\(\).*?do\(\)/s)
+    Enum.reduce(splitted, 0, fn snip, acc -> acc + mulshit(snip) end)
   end
 end
