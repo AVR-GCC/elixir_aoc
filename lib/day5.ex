@@ -62,14 +62,17 @@ defmodule Day5 do
     end
   end
 
+  def get_middle_value(values) do
+    middle_index = round((length(values) - 1) / 2)
+    Enum.at(values, middle_index)
+  end
+
   def part1(path) do
     {rules, updates} = parse_input(path)
     updates
     |> Enum.reduce(0, fn update, acc -> 
       if update_follows_rules(update, rules, []) do
-        middle_index = round((length(update) - 1) / 2)
-        middle_value = Enum.at(update, middle_index)
-        acc + middle_value
+        acc + get_middle_value(update)
       else
         acc
       end
