@@ -1,4 +1,6 @@
 defmodule Day5 do
+  import ElixirAoc
+
   def input_to_rules_and_updates(path) do
     File.read!(path)
     |> String.split("\n\n")
@@ -75,6 +77,24 @@ defmodule Day5 do
         acc + get_middle_value(update)
       else
         acc
+      end
+    end)
+  end
+
+  def compare_by_rules(rules, a, b) do
+    forbidden = Map.get(rules, a, [])
+    Enum.member?(forbidden, b)
+  end
+
+  def part2(path) do
+    {rules, updates} = parse_input(path)
+    updates
+    |> Enum.reduce(0, fn update, acc -> 
+      if update_follows_rules(update, rules, []) do
+        acc
+      else
+        sorted = pivot_sort(fn a, b -> compare_by_rules(rules, a, b) end, update)
+        acc + get_middle_value(sorted)
       end
     end)
   end
