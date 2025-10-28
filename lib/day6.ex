@@ -50,10 +50,8 @@ defmodule Day6 do
     else
       {index_list_raw, &>/2, 1, -1, total}
     end
-    test_func = fn elem -> 
-      operator.(elem, moving_coordinate)
-    end
     directions = %{:up => :right, :right => :down, :down => :left, :left => :up}
+    test_func = &(operator.(&1, moving_coordinate))
     case Enum.find(index_list, :none, test_func) do
       :none -> {Enum.to_list(moving_coordinate..(edge + increment)//every) |> tupelize.(), :finished}
       stop_idx -> {Enum.to_list(moving_coordinate..(stop_idx + increment)//every) |> tupelize.(), Map.get(directions, direction, :finished)}
