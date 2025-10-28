@@ -75,13 +75,13 @@ defmodule Day6 do
   end
 
   defp walk_to_finish(total, indexes, pos, direction, visited_map) do
-    case walk_to_end(total, indexes, pos, direction) do
-      {visited, :finished} -> 
-        update_map(visited_map, visited)
-      {visited, next_direction} -> 
-        {updated_map, new_pos} = update_map(visited_map, visited)
-        next_pos = if length(visited) > 0 do new_pos else pos end
-        walk_to_finish(total, indexes, next_pos, next_direction, updated_map)
+    {visited, next_direction} = walk_to_end(total, indexes, pos, direction)
+    {updated_map, new_pos} = update_map(visited_map, visited)
+    if next_direction == :finished do
+      {updated_map, new_pos}
+    else
+      next_pos = if length(visited) > 0 do new_pos else pos end
+      walk_to_finish(total, indexes, next_pos, next_direction, updated_map)
     end
   end
 
