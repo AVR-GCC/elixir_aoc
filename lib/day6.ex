@@ -36,11 +36,6 @@ defmodule Day6 do
     end)
   end
 
-  defp find_first([], _), do: :none
-  defp find_first([head | tail], test_func) do
-    if test_func.(head) do head else find_first(tail, test_func) end
-  end
-
   defp walk_to_end(total, indexes, {start_x, start_y}, direction) do
     is_horizontal = direction in [:right, :left]
     is_reversed = direction in [:left, :up]
@@ -59,7 +54,7 @@ defmodule Day6 do
       operator.(elem, moving_coordinate)
     end
     directions = %{:up => :right, :right => :down, :down => :left, :left => :up}
-    case find_first(index_list, test_func) do
+    case Enum.find(index_list, :none, test_func) do
       :none -> {Enum.to_list(moving_coordinate..(edge + increment)//every) |> tupelize.(), :finished}
       stop_idx -> {Enum.to_list(moving_coordinate..(stop_idx + increment)//every) |> tupelize.(), Map.get(directions, direction, :finished)}
     end
