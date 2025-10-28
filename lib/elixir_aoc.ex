@@ -25,4 +25,13 @@ defmodule ElixirAoc do
     Map.update(map, head, 1, fn cur -> cur + 1 end)
   end
   def histogramify([]), do: %{}
+
+  defp rotate_mat_rec(row, _cols, [[] | _rest]), do: row
+  defp rotate_mat_rec(row, cols, []) do
+      [row | rotate_mat_rec([], [], Enum.reverse(cols))]
+  end
+  defp rotate_mat_rec(row, cols, [[head | tail] | rest]) do
+      rotate_mat_rec([head | row], [tail | cols], rest)
+  end
+  def rotate_mat(mat), do: rotate_mat_rec([], [], mat)
 end
