@@ -80,7 +80,8 @@ defmodule Day6 do
         update_map(visited_map, visited)
       {visited, next_direction} -> 
         {updated_map, new_pos} = update_map(visited_map, visited)
-        walk_to_finish(total, indexes, if length(visited) > 0 do new_pos else pos end, next_direction, updated_map)
+        next_pos = if length(visited) > 0 do new_pos else pos end
+        walk_to_finish(total, indexes, next_pos, next_direction, updated_map)
     end
   end
 
