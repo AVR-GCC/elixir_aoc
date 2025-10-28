@@ -40,9 +40,9 @@ defmodule Day6 do
     is_horizontal = direction in [:right, :left]
     is_reversed = direction in [:left, :up]
     {indexes_first_key, indexes_second_key, moving_coordinate, tupelize} = if is_horizontal do 
-      {:right, start_y, start_x, fn xs -> xs |> Enum.map(&({&1, start_y})) end}
+      {:right, start_y, start_x, fn xs -> Enum.map(xs, &({&1, start_y})) end}
     else 
-      {:down, start_x, start_y, fn ys -> ys |> Enum.map(&({start_x, &1})) end} 
+      {:down, start_x, start_y, fn ys -> Enum.map(ys, &({start_x, &1})) end}
     end
     index_list_raw = get_in(indexes, [indexes_first_key, indexes_second_key])
     {index_list, operator, every, increment, edge} = if is_reversed do 
