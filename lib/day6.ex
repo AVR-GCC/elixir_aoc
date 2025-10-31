@@ -69,14 +69,20 @@ defmodule Day6 do
     update_map(Map.put(visited_map, cur_location, true), rest)
   end
 
-  defp walk_to_finish(total, indexes, pos, direction, visited_map) do
+  defp walk_to_finish(total, indexes, pos, direction, visited_map, visited_direction) do
     {visited, next_direction} = walk_to_end(total, indexes, pos, direction)
     updated_map = update_map(visited_map, visited)
     next_pos = List.last(visited, pos)
-    if next_direction == :finished do
-      updated_map
-    else
-      walk_to_finish(total, indexes, next_pos, next_direction, updated_map)
+    existing_visited_direction = Map.get(visited_direction, direction, [])
+    if Enum.member?(existing_visited_direction, next_pos) do {updated_map, :cycle} else
+      add_to_visited_direction = if length(visited) == 0 do [pos] else visited end
+      new_visited_direction_list = add_to_visited_direction ++ existing_visited_direction
+      new_visited_direction = Map.put(visited_direction, direction, new_visited_direction_list)
+      if next_direction == :finished do
+        {updated_map, :ok}
+      else
+        walk_to_finish(total, indexes, next_pos, next_direction, updated_map, new_visited_direction)
+      end
     end
   end
 
@@ -93,8 +99,7 @@ defmodule Day6 do
     end)
   end
 
-  def part1(path) do
-    right_mat = input_to_matrix(path)
+  def get_start_pos_and_indexes(right_mat) do
     up_mat = rotate_mat(right_mat)
     left_mat = rotate_mat(up_mat)
     down_mat = Enum.reverse(rotate_mat(left_mat))
@@ -103,7 +108,13 @@ defmodule Day6 do
       :down => mat_to_index_lookup(down_mat)
     }
     start_pos = find_start_position(right_mat)
-    final_map = walk_to_finish(length(right_mat), indexes, start_pos, :up, %{})
+    {start_pos, indexes}
+  end
+
+  def part1(path) do
+    right_mat = input_to_matrix(path)
+    {start_pos, indexes} = get_start_pos_and_indexes(right_mat)
+    {final_map, _} = walk_to_finish(length(right_mat), indexes, start_pos, :up, %{}, %{})
     # print_mat(right_mat, final_map)
     Enum.count(final_map)
   end
