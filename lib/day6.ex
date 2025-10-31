@@ -74,7 +74,7 @@ defmodule Day6 do
     updated_map = update_map(visited_map, visited)
     next_pos = List.last(visited, pos)
     if next_direction == :finished do
-      {updated_map, next_pos}
+      updated_map
     else
       walk_to_finish(total, indexes, next_pos, next_direction, updated_map)
     end
@@ -103,7 +103,7 @@ defmodule Day6 do
       :down => mat_to_index_lookup(down_mat)
     }
     start_pos = find_start_position(right_mat)
-    {final_map, _} = walk_to_finish(length(right_mat), indexes, start_pos, :up, %{})
+    final_map = walk_to_finish(length(right_mat), indexes, start_pos, :up, %{})
     # print_mat(right_mat, final_map)
     Enum.count(final_map)
   end
