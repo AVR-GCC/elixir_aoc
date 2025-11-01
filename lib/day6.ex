@@ -131,9 +131,7 @@ defmodule Day6 do
           updated_down = update_in(indexes, [:down, x], fn cur_x_lst -> insert_sorted(cur_x_lst, y) end)
           updated_both = update_in(updated_down, [:right, y], fn cur_y_lst -> insert_sorted(cur_y_lst, x) end)
           case walk_to_finish(total, updated_both, start_pos, :up, %{}, %{}) do
-            {_, :cycle} ->
-              IO.puts("(#{x}, #{y})")
-              yacc + 1
+            {_, :cycle} -> yacc + 1
             _ -> yacc
           end
         end
