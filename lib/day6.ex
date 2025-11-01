@@ -118,4 +118,26 @@ defmodule Day6 do
     # print_mat(right_mat, final_map)
     Enum.count(final_map)
   end
+
+  def part2(path) do
+    right_mat = input_to_matrix(path)
+    {start_pos, indexes} = get_start_pos_and_indexes(right_mat)
+    total = length(right_mat)
+    {final_map, _} = walk_to_finish(total, indexes, start_pos, :up, %{}, %{})
+    last_index = total - 1
+    Enum.reduce(0..last_index, 0, fn x, xacc ->
+      Enum.reduce(0..last_index, fn y, yacc ->
+        if not Map.get(final_map, {x, y}, false) and {x, y} != start_pos do yacc else
+          updated_down = update_in(indexes, [:down, x], fn cur_x_lst -> insert_sorted(cur_x_lst, y) end)
+          updated_both = update_in(updated_down, [:right, y], fn cur_y_lst -> insert_sorted(cur_y_lst, x) end)
+          case walk_to_finish(total, updated_both, start_pos, :up, %{}, %{}) do
+            {_, :cycle} ->
+              IO.puts("(#{x}, #{y})")
+              yacc + 1
+            _ -> yacc
+          end
+        end
+      end) + xacc
+    end)
+  end
 end

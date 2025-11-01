@@ -1,4 +1,9 @@
 defmodule ElixirAoc do
+  def insert_sorted([], item), do: [item]
+  def insert_sorted([head | tail] = list, item) do
+    if item < head do [item | list] else [head | insert_sorted(tail, item)] end
+  end
+
   defp pivot_one_item(_, acc, _, []), do: acc
   defp pivot_one_item(fun, {less, more}, item, [head | tail]) do
     if fun.(item, head) do
